@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -20,5 +21,10 @@ class MovieNetworkModule {
     @Provides
     fun provideMovieMapper():MovieWebMapper{
         return MovieWebMapper()
+    }
+    @Provides
+    @Singleton
+    fun provideWebService(retrofit: Retrofit): WebService {
+        return WebService(retrofit)
     }
 }

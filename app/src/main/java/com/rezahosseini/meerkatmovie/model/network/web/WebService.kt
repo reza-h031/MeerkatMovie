@@ -6,6 +6,7 @@ import javax.inject.Inject
 class WebService {
     var retrofit:Retrofit
     private val movieService:MovieService
+    @Inject
     constructor(retrofit: Retrofit){
         this.retrofit=retrofit
         movieService=retrofit.create(MovieService::class.java)
