@@ -34,6 +34,6 @@ class MovieTest {
     @Test
     fun movieInvalid_isOkTitle_byFactory(){
         val movie=MovieFactory.createInvalidMovie()
-        assertNotEquals("Pulp Fiction",movie)
+        assertNotEquals("Pulp Fiction",movie.name)
     }
 }
