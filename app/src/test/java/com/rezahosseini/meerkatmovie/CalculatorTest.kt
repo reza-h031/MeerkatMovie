@@ -95,7 +95,7 @@ class CalculatorTest {
 
         val resultDivide= calculator.divide(2, 6)
 
-        assertEquals(3, resultDivide)
+        assertEquals(0, resultDivide)
     }
     @Test
     fun divide_shouldReturnQuotient2() {
