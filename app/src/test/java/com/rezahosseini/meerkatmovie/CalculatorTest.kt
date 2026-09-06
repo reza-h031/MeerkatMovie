@@ -2,41 +2,43 @@ package com.rezahosseini.meerkatmovie
 
 import com.rezahosseini.meerkatmovie.learntest.Calculator
 import junit.framework.TestCase.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class CalculatorTest {
+    private lateinit var calculator: Calculator
 
+    @Before
+    fun setup(){
+        calculator = Calculator()
+    }
     @Test
     fun add_shouldReturnSum() {
 
-        val calculator = Calculator()
 
         val resultAdd = calculator.add(2, 3)
 
         assertEquals(5, resultAdd)
     }
     @Test
-    fun subtract_shouldReturnSum() {
+    fun subtract_shouldReturnDifference() {
 
-        val calculator = Calculator()
 
         val resultSubtract = calculator.subtract(2, 3)
 
         assertEquals(-1, resultSubtract)
     }
     @Test
-    fun multiply_shouldReturnSum() {
+    fun multiply_shouldReturnProduct() {
 
-        val calculator = Calculator()
 
         val resultMultiply = calculator.multiply(2, 3)
 
         assertEquals(6, resultMultiply)
     }
     @Test
-    fun divide_shouldReturnSum() {
+    fun divide_shouldReturnQuotient() {
 
-        val calculator = Calculator()
 
         val resultDivide= calculator.divide(4, 2)
 
