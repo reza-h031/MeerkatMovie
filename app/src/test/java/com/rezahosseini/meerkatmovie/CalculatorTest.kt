@@ -1,7 +1,10 @@
 package com.rezahosseini.meerkatmovie
 
 import com.rezahosseini.meerkatmovie.learntest.Calculator
-import junit.framework.TestCase.assertEquals
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -43,5 +46,20 @@ class CalculatorTest {
         val resultDivide= calculator.divide(4, 2)
 
         assertEquals(2, resultDivide)
+    }
+    @Test
+    fun add_shouldReturnPositiveNumber() {
+
+        val result = calculator.add(2, 3)
+
+        assertTrue(result > 0)
+    }
+    fun divide_shouldReturnPositiveNumber(){
+        val result=calculator.divide(4,2)
+        assertFalse(result<0)
+    }
+    fun multiply_shouldReturnIsNull(){
+        val result=calculator.multiply(2,2)
+        assertNotNull(result)
     }
 }
