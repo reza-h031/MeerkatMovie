@@ -4,6 +4,7 @@ import com.rezahosseini.meerkatmovie.learntest.Calculator
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -54,12 +55,20 @@ class CalculatorTest {
 
         assertTrue(result > 0)
     }
+    @Test
     fun divide_shouldReturnPositiveNumber(){
         val result=calculator.divide(4,2)
         assertFalse(result<0)
     }
+    @Test
     fun multiply_shouldReturnIsNull(){
         val result=calculator.multiply(2,2)
         assertNotNull(result)
+    }
+    @Test
+    fun multiplyAndAdd_shouldReturnToSame(){
+        val resultMultiply=calculator.multiply(2,2)
+        val resultAdd=calculator.add(2,2)
+        assertSame(resultAdd,resultMultiply)
     }
 }
