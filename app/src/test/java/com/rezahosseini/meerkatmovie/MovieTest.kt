@@ -8,6 +8,9 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
+import com.github.javafaker.Faker
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 
 class MovieTest {
     private lateinit var movie:Movie
@@ -35,5 +38,44 @@ class MovieTest {
     fun movieInvalid_isOkTitle_byFactory(){
         val movie=MovieFactory.createInvalidMovie()
         assertNotEquals("Pulp Fiction",movie.name)
+    }
+
+    @Test
+    fun oldMovie_shouldReturnFalse() {
+
+        // Arrange
+        val movie = MovieFactory.createMovieWithYear(1800)
+
+        // Act
+        val result = isValidMovie(movie)
+
+        // Assert
+        assertFalse(result)
+    }
+    @Test
+    fun movieFake_isNotEmptyAndNameIsNotEmptyAndYearIsOkAndIdIsOk_byFakerRandom(){
+        val movie=MovieFactory.createFakerRandom()
+        assertNotNull(movie)
+        assertFalse(movie.name.isEmpty())
+        assertTrue(isOkYear(movie.year))
+        assertNotNull(movie.id)
+    }
+    fun isValidMovie(movie: Movie): Boolean {
+        return movie.name.isNotBlank() &&
+                movie.year >= 1900
+    }
+    fun isOkYear(year:Int):Boolean{
+        return year>1900
+    }
+    @Test
+    fun listMovie_isNotEmpty_byFakerRandom(){
+        val listMovie:ArrayList<Movie> = ArrayList()
+        repeat(10) {
+            val movie = MovieFactory.createFakerRandom()
+            assertNotNull(movie)
+            listMovie.add(movie)
+        }
+//        or assertNotEmpty in jUnit 5
+        assertTrue(listMovie.isNotEmpty())
     }
 }
