@@ -2,6 +2,7 @@ package com.rezahosseini.meerkatmovie.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rezahosseini.meerkatmovie.model.Movie
 import com.rezahosseini.meerkatmovie.repository.MovieRepository
 import com.rezahosseini.meerkatmovie.viewmodel.state.MovieUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,9 +16,6 @@ class MovieViewModel(
         MutableStateFlow(MovieUiState())
 
     val uiState: StateFlow<MovieUiState> = _uiState
-    init {
-        loadMovies()
-    }
 
     private fun loadMovies() {
         viewModelScope.launch {
@@ -39,6 +37,10 @@ class MovieViewModel(
 
             }
         }
+    }
+//    loadMoviesForTest
+     fun getMovies():List<Movie>{
+        return movieRepository.getListMovie()
     }
     public fun addNewMovies(name:String,year:Int){
         viewModelScope.launch {

@@ -27,7 +27,7 @@ object MovieFactory {
         return Movie(
             faker.number().numberBetween(0,1000),
             faker.name().fullName(),
-            faker.number().numberBetween(1800,2026)
+            faker.number().numberBetween(1900,2026)
         )
     }
     fun createMovieWithYear(year: Int): Movie {

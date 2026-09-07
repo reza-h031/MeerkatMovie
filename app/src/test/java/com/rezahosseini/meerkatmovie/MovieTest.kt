@@ -2,15 +2,26 @@ package com.rezahosseini.meerkatmovie
 
 import com.rezahosseini.meerkatmovie.factory.MovieFactory
 import com.rezahosseini.meerkatmovie.model.Movie
+import com.rezahosseini.meerkatmovie.model.network.repository.MovieProviderImpl
+import com.rezahosseini.meerkatmovie.repository.MovieRepository
+import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModel
+import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModelNetwork
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
-import com.github.javafaker.Faker
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.mockito.Mockito
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
+import org.junit.Assert.assertEquals
+
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.verify
 
 class MovieTest {
     private lateinit var movie:Movie
@@ -77,5 +88,29 @@ class MovieTest {
         }
 //        or assertNotEmpty in jUnit 5
         assertTrue(listMovie.isNotEmpty())
+    }
+    @Test
+    fun loadMovies_shouldReturnMovies() {
+
+        // Arrange
+        val movies = listOf(
+            Movie(1, "Pulp Fiction", 1994),
+            Movie(2, "Fight Club", 1999)
+        )
+
+        val repository = mock<MovieRepository>()
+
+        `when`(repository.getListMovie())
+            .thenReturn(movies)
+
+        val viewModel = MovieViewModel(repository)
+
+        // Act
+        val result = viewModel.getMovies()
+
+        // Assert
+        assertEquals(movies, result)
+
+        verify(repository).getListMovie()
     }
 }

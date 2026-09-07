@@ -81,8 +81,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-//    add faker for test
+//    faker
     testImplementation(libs.javafaker)
+//    mockito
+    testImplementation(libs.mockito)
 }
 kapt {
     correctErrorTypes=true
