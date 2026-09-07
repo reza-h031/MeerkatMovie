@@ -20,5 +20,8 @@ class MovieRepository {
     fun getListMovie(): List<Movie> {
         return _movies.toList()
     }
+    fun getById(id:Int):Movie{
+        return _movies.get(id-1)
+    }
 
 }

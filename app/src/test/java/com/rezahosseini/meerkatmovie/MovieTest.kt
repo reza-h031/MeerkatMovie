@@ -2,10 +2,8 @@ package com.rezahosseini.meerkatmovie
 
 import com.rezahosseini.meerkatmovie.factory.MovieFactory
 import com.rezahosseini.meerkatmovie.model.Movie
-import com.rezahosseini.meerkatmovie.model.network.repository.MovieProviderImpl
 import com.rezahosseini.meerkatmovie.repository.MovieRepository
 import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModel
-import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModelNetwork
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
@@ -14,13 +12,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.mockito.Mockito
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
-import org.junit.Assert.assertEquals
 
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 
 class MovieTest {
@@ -112,5 +108,20 @@ class MovieTest {
         assertEquals(movies, result)
 
         verify(repository).getListMovie()
+    }
+    @Test
+    fun loadMoviesById_shouldReturnMovies(){
+        val movies = listOf(
+            Movie(1, "Pulp Fiction", 1994),
+            Movie(2, "Fight Club", 1999)
+        )
+        val repository = mock<MovieRepository>()
+        `when`(repository.getById(any()))
+            .thenReturn(movies.last)
+        val viewModel=MovieViewModel(repository)
+        val result=viewModel.getMovieById(any())
+
+        assertEquals(movies.last,result)
+        verify(repository,times(1)).getById(any())
     }
 }

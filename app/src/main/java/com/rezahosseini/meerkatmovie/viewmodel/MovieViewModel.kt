@@ -52,4 +52,7 @@ class MovieViewModel(
             )
         }
     }
+    public fun getMovieById(id:Int):Movie{
+        return movieRepository.getById(id)
+    }
 }
