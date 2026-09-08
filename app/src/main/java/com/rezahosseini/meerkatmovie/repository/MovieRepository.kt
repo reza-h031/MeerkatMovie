@@ -23,5 +23,12 @@ class MovieRepository {
     fun getById(id:Int):Movie{
         return _movies.get(id-1)
     }
+//    add for tset
+    suspend fun getMoviesT(): List<Movie> {
+        return listOf(
+            Movie(1, "Pulp Fiction", 1994),
+            Movie(2, "Fight Club", 1999)
+        )
+    }
 
 }

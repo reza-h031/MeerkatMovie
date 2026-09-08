@@ -18,7 +18,7 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 
 import org.mockito.Mockito.verify
-
+import kotlinx.coroutines.test.runTest
 class MovieTest {
     private lateinit var movie:Movie
     @Before
@@ -116,12 +116,26 @@ class MovieTest {
             Movie(2, "Fight Club", 1999)
         )
         val repository = mock<MovieRepository>()
-        `when`(repository.getById(any()))
-            .thenReturn(movies.last)
+        `when`(repository.getById(1))
+            .thenReturn(movies.get(0))
         val viewModel=MovieViewModel(repository)
-        val result=viewModel.getMovieById(any())
+        val result=viewModel.getMovieById(1)
 
-        assertEquals(movies.last,result)
-        verify(repository,times(1)).getById(any())
+        assertEquals(movies.get(0),result)
+        verify(repository,times(1)).getById(1)
+    }
+    @Test
+    fun getMovies_returnCoroutine() =runTest  {
+        val movies = listOf(
+            Movie(1, "Pulp Fiction", 1994),
+            Movie(2, "Fight Club", 1999)
+        )
+        val repository=mock<MovieRepository>()
+        `when`(repository.getMoviesT())
+            .thenReturn(movies)
+        val viewModel=MovieViewModel(repository)
+        val result=viewModel.getMoviesT()
+        assertEquals(movies,result)
+        verify(repository, times(1)).getMoviesT()
     }
 }

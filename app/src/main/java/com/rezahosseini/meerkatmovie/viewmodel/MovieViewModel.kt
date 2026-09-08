@@ -55,4 +55,7 @@ class MovieViewModel(
     public fun getMovieById(id:Int):Movie{
         return movieRepository.getById(id)
     }
+    suspend fun getMoviesT():List<Movie>{
+        return movieRepository.getMoviesT()
+    }
 }

@@ -85,6 +85,8 @@ dependencies {
     testImplementation(libs.javafaker)
 //    mockito
     testImplementation(libs.mockito)
+//    kotlinx coroutines test
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 kapt {
     correctErrorTypes=true
