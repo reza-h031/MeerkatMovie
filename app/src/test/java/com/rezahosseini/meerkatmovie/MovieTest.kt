@@ -25,7 +25,7 @@ import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModelLocal
 import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModelNetwork
 import com.rezahosseini.meerkatmovie.viewmodel.state.MovieUiStateLocal
 import kotlinx.coroutines.flow.flow
-
+import com.rezahosseini.meerkatmovie.viewmodel.Event.MovieEvent
 class MovieTest {
     private lateinit var movie:Movie
     @Before
@@ -164,6 +164,7 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
             "Success",
             awaitItem()
         )
+        awaitComplete()
     }
 }
 //    test flow error by torbin
@@ -323,6 +324,33 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
             assertTrue(
                 state is MovieUiStateLocal.Success &&
                         state.data.isEmpty()
+            )
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+    @Test
+    fun deleteMovie_shouldEmitShowMessageEvent() = runTest {
+
+        // Arrange
+        val movie = Movie(
+            1,
+            "Pulp Fiction",
+            1994
+        )
+
+        val repository = mock<MovieRepositoryLocal>()
+
+        val viewModel = MovieViewModelLocal(repository)
+
+        // Act + Assert
+        viewModel.event.test {
+
+            viewModel.delete(movie)
+
+            assertEquals(
+                MovieEvent.ShowMessage("Movie deleted"),
+                awaitItem()
             )
 
             cancelAndIgnoreRemainingEvents()

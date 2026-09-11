@@ -1,5 +1,6 @@
 package com.rezahosseini.meerkatmovie
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,9 +16,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +41,7 @@ import com.rezahosseini.meerkatmovie.viewmodel.factory.MovieViewModelFactory
 import com.rezahosseini.meerkatmovie.viewmodel.factory.MovieViewModelFactoryLocal
 import com.rezahosseini.meerkatmovie.viewmodel.state.MovieUiStateLocal
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rezahosseini.meerkatmovie.viewmodel.Event.MovieEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -192,6 +197,7 @@ fun setViewModelArray( modifier: Modifier = Modifier,factory: MovieViewModelFact
 
 
 }
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun setViewModelLocal( modifier: Modifier = Modifier,viewModel: MovieViewModelLocal = hiltViewModel()) {
     var nameNewMovie by remember {
@@ -289,6 +295,30 @@ fun setViewModelLocal( modifier: Modifier = Modifier,viewModel: MovieViewModelLo
                 }
 
             }
+
+        }
+//        add event
+        val snackbarHostState = remember {
+            SnackbarHostState()
+        }
+        LaunchedEffect(Unit) {
+
+            viewModel.event.collect { event ->
+
+                when (event) {
+                    is MovieEvent.ShowMessage -> {
+                        snackbarHostState.showSnackbar(
+                            event.message
+                        )
+                    }
+                }
+            }
+        }
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(snackbarHostState)
+            }
+        ) {
 
         }
     }

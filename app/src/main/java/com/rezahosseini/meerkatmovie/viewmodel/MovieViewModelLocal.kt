@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rezahosseini.meerkatmovie.model.Movie
 import com.rezahosseini.meerkatmovie.model.local.repository.MovieRepositoryLocal
+import com.rezahosseini.meerkatmovie.viewmodel.Event.MovieEvent
 import com.rezahosseini.meerkatmovie.viewmodel.state.MovieUiState
 import com.rezahosseini.meerkatmovie.viewmodel.state.MovieUiStateLocal
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,12 +16,14 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 @HiltViewModel
 class MovieViewModelLocal@Inject constructor(
     private val repository: MovieRepositoryLocal
 ) : ViewModel() {
-
+    private val _event = MutableSharedFlow<MovieEvent>()
+    val event = _event.asSharedFlow()
     val uiState: StateFlow<MovieUiStateLocal<List<Movie>>> =
         repository
             .getAllMovie()
@@ -54,6 +57,10 @@ class MovieViewModelLocal@Inject constructor(
 
         viewModelScope.launch {
             repository.deleteMovie(movie)
+            _event.emit(
+                MovieEvent.ShowMessage("Movie deleted")
+            )
         }
+
     }
 }
