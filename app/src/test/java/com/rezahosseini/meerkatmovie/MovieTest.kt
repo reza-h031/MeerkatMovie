@@ -191,6 +191,10 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
             Movie(1, "Pulp Fiction", 1994),
             Movie(2, "Fight Club", 1999)
         )
+        val movies2= listOf(
+            Movie(1, "test", 1994),
+            Movie(2, "test", 1999)
+        )
 
         val provider = mock<MovieRepositoryLocal>()
 
@@ -198,6 +202,7 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
             .thenReturn(
                 flow {
                     emit(movies)
+                    emit(movies2)
                 }
             )
 
@@ -214,6 +219,10 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
 
             assertEquals(
                 MovieUiStateLocal.Success(movies),
+                awaitItem()
+            )
+            assertEquals(
+                MovieUiStateLocal.Success(movies2),
                 awaitItem()
             )
 
@@ -273,6 +282,37 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
         // Assert
         viewModel.uiState.test {
 
+            assertEquals(
+                MovieUiStateLocal.loading,
+                awaitItem()
+            )
+
+            val state = awaitItem()
+
+            assertTrue(
+                state is MovieUiStateLocal.Success &&
+                        state.data.isEmpty()
+            )
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+    @Test
+    fun initialState_shouldBeLoading() = runTest {
+        val repository = mock<MovieRepositoryLocal>()
+
+        mockWhen(repository.getAllMovie())
+            .thenReturn(flow { emit(emptyList()) })
+
+        val viewModel = MovieViewModelLocal(repository)
+
+//        test
+        assertEquals(
+            MovieUiStateLocal.loading,
+            viewModel.uiState.value
+        )
+//        to
+        viewModel.uiState.test{
             assertEquals(
                 MovieUiStateLocal.loading,
                 awaitItem()
