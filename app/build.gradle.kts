@@ -87,6 +87,8 @@ dependencies {
     testImplementation(libs.mockito)
 //    kotlinx coroutines test
     testImplementation(libs.kotlinx.coroutines.test)
+//    turbine
+    testImplementation(libs.turbine)
 }
 kapt {
     correctErrorTypes=true

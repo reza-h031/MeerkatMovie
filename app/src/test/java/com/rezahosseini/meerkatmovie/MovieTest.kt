@@ -15,10 +15,17 @@ import org.junit.Assert.assertTrue
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
-import org.mockito.Mockito.`when`
-
+import org.mockito.Mockito.`when` as mockWhen
 import org.mockito.Mockito.verify
 import kotlinx.coroutines.test.runTest
+import app.cash.turbine.test
+import com.rezahosseini.meerkatmovie.model.local.repository.MovieRepositoryLocal
+import com.rezahosseini.meerkatmovie.model.network.repository.MovieProviderImpl
+import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModelLocal
+import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModelNetwork
+import com.rezahosseini.meerkatmovie.viewmodel.state.MovieUiStateLocal
+import kotlinx.coroutines.flow.flow
+
 class MovieTest {
     private lateinit var movie:Movie
     @Before
@@ -96,7 +103,7 @@ class MovieTest {
 
         val repository = mock<MovieRepository>()
 
-        `when`(repository.getListMovie())
+        mockWhen(repository.getListMovie())
             .thenReturn(movies)
 
         val viewModel = MovieViewModel(repository)
@@ -116,7 +123,7 @@ class MovieTest {
             Movie(2, "Fight Club", 1999)
         )
         val repository = mock<MovieRepository>()
-        `when`(repository.getById(1))
+        mockWhen(repository.getById(1))
             .thenReturn(movies.get(0))
         val viewModel=MovieViewModel(repository)
         val result=viewModel.getMovieById(1)
@@ -131,11 +138,154 @@ class MovieTest {
             Movie(2, "Fight Club", 1999)
         )
         val repository=mock<MovieRepository>()
-        `when`(repository.getMoviesT())
+        mockWhen(repository.getMoviesT())
             .thenReturn(movies)
         val viewModel=MovieViewModel(repository)
         val result=viewModel.getMoviesT()
         assertEquals(movies,result)
         verify(repository, times(1)).getMoviesT()
+    }
+//    torbin
+//    test to test flow by torbin
+@Test
+fun flow_shouldEmitLoadingThenSuccess() = runTest {
+
+    flow {
+        emit("Loading")
+        emit("Success")
+    }.test {
+
+        assertEquals(
+            "Loading",
+            awaitItem()
+        )
+
+        assertEquals(
+            "Success",
+            awaitItem()
+        )
+    }
+}
+//    test flow error by torbin
+    @Test
+    fun flow_shouldReturnError() = runTest {
+
+        flow<Int> {
+            throw RuntimeException("Network Error")
+        }.test {
+
+            val error = awaitError()
+
+            assertEquals(
+                "Network Error",
+                error.message
+            )
+        }
+    }
+//  test success list in state flow Ui state local
+    @Test
+    fun uiState_shouldEmitLoadingThenSuccess() = runTest {
+
+        // Arrange
+        val movies = listOf(
+            Movie(1, "Pulp Fiction", 1994),
+            Movie(2, "Fight Club", 1999)
+        )
+
+        val provider = mock<MovieRepositoryLocal>()
+
+        mockWhen(provider.getAllMovie())
+            .thenReturn(
+                flow {
+                    emit(movies)
+                }
+            )
+
+        // Act
+        val viewModel = MovieViewModelLocal(provider)
+
+        // Assert
+        viewModel.uiState.test {
+
+            assertEquals(
+                MovieUiStateLocal.loading,
+                awaitItem()
+            )
+
+            assertEquals(
+                MovieUiStateLocal.Success(movies),
+                awaitItem()
+            )
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+//    test error in state flow Ui state local
+    @Test
+    fun uiState_shouldEmitLoadingThenError() = runTest {
+
+        // Arrange
+        val provider = mock<MovieRepositoryLocal>()
+
+        mockWhen(provider.getAllMovie())
+            .thenReturn(
+                flow {
+                    throw RuntimeException("Network Error")
+                }
+            )
+
+        // Act
+        val viewModel = MovieViewModelLocal(provider)
+
+        // Assert
+        viewModel.uiState.test {
+
+            assertEquals(
+                MovieUiStateLocal.loading,
+                awaitItem()
+            )
+
+            assertEquals(
+                MovieUiStateLocal.Error("Network Error"),
+                awaitItem()
+            )
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+//    test empty list in state flow Ui state local
+    @Test
+    fun uiState_shouldEmitSuccessWithEmptyList() = runTest {
+
+        // Arrange
+        val provider = mock<MovieRepositoryLocal>()
+
+        mockWhen(provider.getAllMovie())
+            .thenReturn(
+                flow {
+                    emit(emptyList())
+                }
+            )
+
+        // Act
+        val viewModel = MovieViewModelLocal(provider)
+
+        // Assert
+        viewModel.uiState.test {
+
+            assertEquals(
+                MovieUiStateLocal.loading,
+                awaitItem()
+            )
+
+            val state = awaitItem()
+
+            assertTrue(
+                state is MovieUiStateLocal.Success &&
+                        state.data.isEmpty()
+            )
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }
