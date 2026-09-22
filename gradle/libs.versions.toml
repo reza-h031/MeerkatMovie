@@ -17,6 +17,7 @@ javafaker = "1.0.2"
 mockito = "5.18.0"
 kotlinxCoroutines = "1.10.2"
 turbine = "1.2.1"
+coreKtxVersion = "1.7.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
@@ -55,6 +56,7 @@ mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 #turbine
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

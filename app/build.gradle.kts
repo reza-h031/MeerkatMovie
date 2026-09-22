@@ -65,6 +65,7 @@ dependencies {
 //    room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.core.ktx)
     kapt(libs.androidx.room.compiler)
 //    retrofit
     implementation(libs.retrofit)
@@ -89,6 +90,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 //    turbine
     testImplementation(libs.turbine)
+    androidTestImplementation(libs.turbine)
 }
 kapt {
     correctErrorTypes=true

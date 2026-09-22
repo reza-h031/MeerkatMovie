@@ -12,7 +12,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when` as mockWhen
@@ -20,17 +19,18 @@ import org.mockito.Mockito.verify
 import kotlinx.coroutines.test.runTest
 import app.cash.turbine.test
 import com.rezahosseini.meerkatmovie.model.local.repository.MovieRepositoryLocal
-import com.rezahosseini.meerkatmovie.model.network.repository.MovieProviderImpl
 import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModelLocal
-import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModelNetwork
 import com.rezahosseini.meerkatmovie.viewmodel.state.MovieUiStateLocal
 import kotlinx.coroutines.flow.flow
 import com.rezahosseini.meerkatmovie.viewmodel.Event.MovieEvent
 class MovieTest {
     private lateinit var movie:Movie
+
+
     @Before
     fun setup(){
         movie=MovieFactory.create()
+
     }
     @Test
     fun movie_isNotNullAndOkTitle_byFactory(){
@@ -298,6 +298,7 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+//    test before loading
     @Test
     fun initialState_shouldBeLoading() = runTest {
         val repository = mock<MovieRepositoryLocal>()
@@ -329,6 +330,7 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+//    test event delete
     @Test
     fun deleteMovie_shouldEmitShowMessageEvent() = runTest {
 
@@ -356,4 +358,5 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
 }

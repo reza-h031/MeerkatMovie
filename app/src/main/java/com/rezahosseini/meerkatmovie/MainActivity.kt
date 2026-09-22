@@ -65,7 +65,28 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             MeerkatMovieTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                val viewModel: MovieViewModelLocal = hiltViewModel()
+                //        add event
+                val snackbarHostState = remember {
+                    SnackbarHostState()
+                }
+                LaunchedEffect(Unit) {
+
+                    viewModel.event.collect { event ->
+
+                        when (event) {
+                            is MovieEvent.ShowMessage -> {
+                                snackbarHostState.showSnackbar(
+                                    event.message
+                                )
+                            }
+                        }
+                    }
+                }
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    snackbarHost = {
+                        SnackbarHost(snackbarHostState)
+                    }) { innerPadding ->
                     setUi(modifier = Modifier.padding(innerPadding), arrayFactory = arrayFactory, localFactory = localFactory)
                 }
             }
@@ -276,6 +297,7 @@ fun setViewModelLocal( modifier: Modifier = Modifier,viewModel: MovieViewModelLo
         ) {
             Text("Add Movie")
         }
+
         Box(modifier = Modifier.fillMaxSize()) {
             when (val state=uiState){
                 is MovieUiStateLocal.loading->{
@@ -287,6 +309,13 @@ fun setViewModelLocal( modifier: Modifier = Modifier,viewModel: MovieViewModelLo
                             Text("${movie.name} - ${movie.year}")
                         }
                     }
+                    Button(
+                        onClick = {
+                            viewModel.delete(state.data.get(1))
+                        }
+                    ) {
+                        Text("delete")
+                    }
                 }
                 is MovieUiStateLocal.Error->{
                     Text(
@@ -297,30 +326,7 @@ fun setViewModelLocal( modifier: Modifier = Modifier,viewModel: MovieViewModelLo
             }
 
         }
-//        add event
-        val snackbarHostState = remember {
-            SnackbarHostState()
-        }
-        LaunchedEffect(Unit) {
 
-            viewModel.event.collect { event ->
-
-                when (event) {
-                    is MovieEvent.ShowMessage -> {
-                        snackbarHostState.showSnackbar(
-                            event.message
-                        )
-                    }
-                }
-            }
-        }
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(snackbarHostState)
-            }
-        ) {
-
-        }
     }
 
 
