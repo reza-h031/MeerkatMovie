@@ -19,17 +19,20 @@ import org.mockito.Mockito.verify
 import kotlinx.coroutines.test.runTest
 import app.cash.turbine.test
 import com.rezahosseini.meerkatmovie.model.local.repository.MovieRepositoryLocal
+import com.rezahosseini.meerkatmovie.model.network.web.mapper.MovieWebMapper
+import com.rezahosseini.meerkatmovie.model.network.web.model.MovieWeb
 import com.rezahosseini.meerkatmovie.viewmodel.MovieViewModelLocal
 import com.rezahosseini.meerkatmovie.viewmodel.state.MovieUiStateLocal
 import kotlinx.coroutines.flow.flow
 import com.rezahosseini.meerkatmovie.viewmodel.Event.MovieEvent
 class MovieTest {
     private lateinit var movie:Movie
-
+    private lateinit var movieWebMapper: MovieWebMapper
 
     @Before
     fun setup(){
         movie=MovieFactory.create()
+        movieWebMapper=MovieWebMapper()
 
     }
     @Test
@@ -357,6 +360,31 @@ fun flow_shouldEmitLoadingThenSuccess() = runTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+//  test mapper movieWeb to movie
+    @Test
+    fun webGameMapper_shouldMapCorrectly() {
+
+        // Arrange
+        val movieWeb = MovieWeb(
+            id = 10,
+            name = "GTA V" ,
+            year= 10
+        )
+
+
+        // Act
+        val result = movieWebMapper.toMovie(movieWeb)
+
+        // Assert
+        assertEquals(
+            Movie(
+                id = 10,
+                name = "GTA V",
+                year=10
+            ),
+            result
+        )
     }
 
 }
