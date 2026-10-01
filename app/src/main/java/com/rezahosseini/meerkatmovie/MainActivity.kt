@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
                         SnackbarHost(snackbarHostState)
                     }) { innerPadding ->
                     setUi(modifier = Modifier.padding(innerPadding), arrayFactory = arrayFactory, localFactory = localFactory)
+
                 }
             }
         }
